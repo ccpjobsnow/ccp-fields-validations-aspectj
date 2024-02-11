@@ -36,31 +36,31 @@ public enum BoundsValidations {
 	FieldArrayTextsWithSizeEqualsOrLessThan
 	{
 		public boolean isValidJson(CcpJsonRepresentation json, double bound, String... fields) {
-			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAnd().hasTheSizeThatIs().equalsTo(bound);
+			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAndHasSizeThatIs().equalsTo(bound);
 		}
 	},
 	FieldArrayTextsWithSizeEqualsOrGreaterThan
 	{
 		public boolean isValidJson(CcpJsonRepresentation json, double bound, String... fields) {
-			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAnd().hasTheSizeThatIs().equalsOrGreaterThan(bound);
+			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAndHasSizeThatIs().equalsOrGreaterThan(bound);
 		}
 	},
 	FieldArrayTextsWithSizeEqualsOrLessThan2
 	{
 		public boolean isValidJson(CcpJsonRepresentation json, double bound, String... fields) {
-			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAnd().hasTheSizeThatIs().equalsOrLessThan(bound);
+			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAndHasSizeThatIs().equalsOrLessThan(bound);
 		}
 	},
 	FieldArrayTextsWithSizeGreaterThan
 	{
 		public boolean isValidJson(CcpJsonRepresentation json, double bound, String... fields) {
-			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAnd().hasTheSizeThatIs().greaterThan(bound);
+			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAndHasSizeThatIs().greaterThan(bound);
 		}
 	},
 	FieldArrayTexstWithSizeLessThan
 	{
 		public boolean isValidJson(CcpJsonRepresentation json, double bound, String... fields) {
-			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAnd().hasTheSizeThatIs().lessThan(bound);
+			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isTextAndHasSizeThatIs().lessThan(bound);
 		}
 	},
 	FieldArrayNumbersWithValueEqualsTo
