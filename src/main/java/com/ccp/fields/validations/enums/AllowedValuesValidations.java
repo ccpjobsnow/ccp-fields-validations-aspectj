@@ -5,26 +5,26 @@ import java.util.List;
 
 import com.ccp.decorators.CcpJsonRepresentation;
 
-public enum RestrictedValuesValidations {
-	FieldArrayTextsThatAreContainedAtTheList {
+public enum AllowedValuesValidations {
+	arrayWithAllowedTexts {
 
 		public boolean isValidJson(CcpJsonRepresentation json, List<Object> restrictedValues, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne()
 					.isTextAndItIsContainedAtTheList(restrictedValues);
 		}
 	},
-	FieldArrayNumbersThatAreContainedAtTheList {
+	arrayWithAllowedNumbers {
 		public boolean isValidJson(CcpJsonRepresentation json, List<Object> restrictedValues, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne()
 					.isNumberAndItIsContainedAtTheList(restrictedValues);
 		}
 	},
-	FieldObjectTextsThatAreContainedAtTheList {
+	objectWithAllowedTexts {
 		public boolean isValidJson(CcpJsonRepresentation json, List<Object> restrictedValues, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAll().textsThenEachOneIsContainedAtTheList(restrictedValues);
 		}
 	},
-	FieldObjectNumbersThatAreContainedAtTheList {
+	objectWithAllowedNumbers {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public boolean isValidJson(CcpJsonRepresentation json, List<Object> restrictedValues, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAll().numbersThenEachOneIsContainedAtTheList((List)restrictedValues);

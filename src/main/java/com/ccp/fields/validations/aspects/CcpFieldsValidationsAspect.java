@@ -8,100 +8,174 @@ import org.aspectj.lang.annotation.Before;
 
 import com.ccp.constantes.CcpConstants;
 import com.ccp.decorators.CcpJsonRepresentation;
-import com.ccp.fields.validations.annotations.CcpFieldValidationBoundsRules;
-import com.ccp.fields.validations.annotations.CcpFieldValidationRules;
-import com.ccp.fields.validations.annotations.CcpFieldValidationRestrictedValuesRules;
-import com.ccp.fields.validations.annotations.CcpFieldValidationSimpleRules;
-import com.ccp.fields.validations.enums.BoundsValidations;
-import com.ccp.fields.validations.enums.RestrictedValuesValidations;
-import com.ccp.fields.validations.enums.SimpleValidations;
+import com.ccp.fields.validations.annotations.ArrayNumbers;
+import com.ccp.fields.validations.annotations.ArraySize;
+import com.ccp.fields.validations.annotations.ArrayTexts;
+import com.ccp.fields.validations.annotations.ObjectNumbers;
+import com.ccp.fields.validations.annotations.ObjectText;
+import com.ccp.fields.validations.annotations.AllowedValues;
+import com.ccp.fields.validations.annotations.ValidationRules;
+import com.ccp.fields.validations.annotations.ObjectRules;
+import com.ccp.fields.validations.enums.BoundValidations;
+import com.ccp.fields.validations.enums.AllowedValuesValidations;
+import com.ccp.fields.validations.enums.ObjectValidations;
 import com.ccp.fields.validations.exceptions.CcpJsonInvalid;
 
 @Aspect
 public class CcpFieldsValidationsAspect {
 	@SuppressWarnings("unchecked")
 	@Before("@annotation(com.ccp.fields.validations.annotations.CcpFieldValidationRules)")
-    public void validateFields(JoinPoint jp, CcpFieldValidationRules rules) {
+	public void validateFields(JoinPoint jp, ValidationRules rules) {
 		Object[] args = jp.getArgs();
-		if(args == null) {
+		if (args == null) {
 			return;
 		}
-		if(args.length == 0) {
+		if (args.length == 0) {
 			return;
 		}
 		boolean doNotReceiveJson = (args[0] instanceof Map) == false;
-		
-		if(doNotReceiveJson) {
+
+		if (doNotReceiveJson) {
 			return;
 		}
-		Map<String, Object> map = (Map<String, Object>)args[0];
+		Map<String, Object> map = (Map<String, Object>) args[0];
 		CcpJsonRepresentation json = new CcpJsonRepresentation(map);
-		
+
 		CcpJsonRepresentation result = CcpConstants.EMPTY_JSON;
-		
+
 		result = this.validateBounds(rules, json, result);
 
 		result = this.validateRestricted(rules, json, result);
-		
+
 		result = this.validateSimples(rules, json, result);
-		
+
 		boolean noErrors = result.isEmpty();
-		
-		if(noErrors) {
+
+		if (noErrors) {
 			return;
 		}
-		
-		throw new CcpJsonInvalid(result);
-    }
 
-	public CcpJsonRepresentation validateSimples(CcpFieldValidationRules rules, CcpJsonRepresentation json,
+		throw new CcpJsonInvalid(result);
+	}
+
+	public CcpJsonRepresentation validateSimples(ValidationRules rules, CcpJsonRepresentation json,
 			CcpJsonRepresentation result) {
-		CcpFieldValidationSimpleRules[] simples = rules.simple();
-		
-		for (CcpFieldValidationSimpleRules validation : simples) {
+		ObjectRules[] simples = rules.simpleObjectRules();
+
+		for (ObjectRules validation : simples) {
 			String[] fields = validation.fields();
-			SimpleValidations rule = validation.rule();
+			ObjectValidations rule = validation.rule();
 			boolean validJson = rule.isValidJson(json, fields);
-			
-			if(validJson) {
+
+			if (validJson) {
 				continue;
 			}
-			result = result.addToList(rule.name(),(Object[]) fields);
+			result = result.addToList(rule.name(), (Object[]) fields);
 		}
 		return result;
 	}
 
-	public CcpJsonRepresentation validateRestricted(CcpFieldValidationRules rules, CcpJsonRepresentation json,
+	public CcpJsonRepresentation validateRestricted(ValidationRules rules, CcpJsonRepresentation json,
 			CcpJsonRepresentation result) {
-		CcpFieldValidationRestrictedValuesRules[] restricteds = rules.restrictedValues();
+		AllowedValues[] restricteds = rules.allowedValues();
 
-		for (CcpFieldValidationRestrictedValuesRules validation : restricteds) {
+		for (AllowedValues validation : restricteds) {
 			String[] restrictedValues = validation.allowedValues();
 			String[] fields = validation.fields();
-			RestrictedValuesValidations rule = validation.rule();
+			AllowedValuesValidations rule = validation.rule();
 			boolean validJson = rule.isValidJson(json, restrictedValues, fields);
-			
-			if(validJson) {
+
+			if (validJson) {
 				continue;
 			}
-			result = result.addToList(rule.name(),(Object[]) fields);
+			result = result.addToList(rule.name(), (Object[]) fields);
 		}
 		return result;
 	}
 
-	public CcpJsonRepresentation validateBounds(CcpFieldValidationRules rules, CcpJsonRepresentation json, CcpJsonRepresentation result) {
-		CcpFieldValidationBoundsRules[] bounds = rules.bounds();
+	public CcpJsonRepresentation validateBounds(ValidationRules rules, CcpJsonRepresentation json,
+			CcpJsonRepresentation result) {
 
-		for (CcpFieldValidationBoundsRules validation : bounds) {
-			double bound = validation.bound();
-			String[] fields = validation.fields();
-			BoundsValidations rule = validation.rule();
-			boolean validJson = rule.isValidJson(json, bound, fields);
-			
-			if(validJson) {
-				continue;
+		{
+			ArrayNumbers[] x1 = rules.arrayNumbersValidations();
+
+			for (ArrayNumbers validation : x1) {
+				double bound = validation.bound();
+				String[] fields = validation.fields();
+				BoundValidations rule = validation.rule();
+				boolean validJson = rule.isValidJson(json, bound, fields);
+
+				if (validJson) {
+					continue;
+				}
+				result = result.addToList(rule.name(), (Object[]) fields);
 			}
-			result = result.addToList(rule.name(),(Object[]) fields);
+
+		}
+
+		{
+			ArraySize[] x1 = rules.arraySizeValidations();
+
+			for (ArraySize validation : x1) {
+				double bound = validation.bound();
+				String[] fields = validation.fields();
+				BoundValidations rule = validation.rule();
+				boolean validJson = rule.isValidJson(json, bound, fields);
+
+				if (validJson) {
+					continue;
+				}
+				result = result.addToList(rule.name(), (Object[]) fields);
+			}
+
+		}
+		{
+			ArrayTexts[] x1 = rules.arrayTextsValidations();
+
+			for (ArrayTexts validation : x1) {
+				double bound = validation.bound();
+				String[] fields = validation.fields();
+				BoundValidations rule = validation.rule();
+				boolean validJson = rule.isValidJson(json, bound, fields);
+
+				if (validJson) {
+					continue;
+				}
+				result = result.addToList(rule.name(), (Object[]) fields);
+			}
+
+		}
+		{
+			ObjectNumbers[] x1 = rules.objectNumbersValidations();
+
+			for (ObjectNumbers validation : x1) {
+				double bound = validation.bound();
+				String[] fields = validation.fields();
+				BoundValidations rule = validation.rule();
+				boolean validJson = rule.isValidJson(json, bound, fields);
+
+				if (validJson) {
+					continue;
+				}
+				result = result.addToList(rule.name(), (Object[]) fields);
+			}
+
+		}
+		{
+			ObjectText[] x1 = rules.objectTextsValidations();
+
+			for (ObjectText validation : x1) {
+				double bound = validation.bound();
+				String[] fields = validation.fields();
+				BoundValidations rule = validation.rule();
+				boolean validJson = rule.isValidJson(json, bound, fields);
+
+				if (validJson) {
+					continue;
+				}
+				result = result.addToList(rule.name(), (Object[]) fields);
+			}
+
 		}
 		return result;
 	}

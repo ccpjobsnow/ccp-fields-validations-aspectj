@@ -2,44 +2,44 @@ package com.ccp.fields.validations.enums;
 
 import com.ccp.decorators.CcpJsonRepresentation;
 
-public enum SimpleValidations {
-	RequiredFields {
+public enum ObjectValidations {
+	requiredFields {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.containsAllKeys(fields);
 		}
 	},
-	BooleanFields {
+	booleanFields {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).areAllOfTheType().bool();
 		}
 	},
-	DoubleFields {
+	doubleFields {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).areAllOfTheType().doubleNumber();
 		}
 	},
-	JsonFields {
+	jsonFields {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).areAllOfTheType().json();
 		}
 	},
-	ListFields {
+	listFields {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).areAllOfTheType().list();
 		}
 	},
-	IntegerFields {
+	integerFields {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).areAllOfTheType().longNumber();
 		}
 	},
-	NonRepeatedLists {
+	nonRepeatedLists {
 		
 		public boolean isValidJson(CcpJsonRepresentation json, String... fields) {
 			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().hasNonDuplicatedItems();
