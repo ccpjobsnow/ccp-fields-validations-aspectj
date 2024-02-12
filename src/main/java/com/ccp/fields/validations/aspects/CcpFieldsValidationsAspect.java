@@ -41,6 +41,10 @@ public class CcpFieldsValidationsAspect {
 		Map<String, Object> map = (Map<String, Object>) args[0];
 		CcpJsonRepresentation json = new CcpJsonRepresentation(map);
 
+		Class<?> rulesClass = rules.rulesClass();
+		
+		rules = rulesClass.isAnnotationPresent(ValidationRules.class) ? rulesClass.getAnnotation(ValidationRules.class) : rules;
+		
 		CcpJsonRepresentation result = CcpConstants.EMPTY_JSON;
 
 		result = this.validateBounds(rules, json, result);
