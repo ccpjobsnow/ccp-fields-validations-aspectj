@@ -1,12 +1,18 @@
 package com.ccp.fields.validations.enums;
 
 import com.ccp.decorators.CcpJsonRepresentation;
+import com.ccp.validation.IfTheyAreArrayValuesSoEachOne;
+import com.ccp.validation.ItIsTrueThatTheFollowingFields;
+import com.ccp.validation.RangeSize;
 
 public enum ArrayNumbersValidations implements BoundValidations{
 	equalsTo
 	{
 		public boolean isValidJson(CcpJsonRepresentation json, double bound, String... fields) {
-			return json.itIsTrueThatTheFollowingFields(fields).ifTheyAreAllArrayValuesThenEachOne().isNumberAndItIs().equalsTo(bound);
+			ItIsTrueThatTheFollowingFields itIsTrueThatTheFollowingFields = json.itIsTrueThatTheFollowingFields(fields);
+			IfTheyAreArrayValuesSoEachOne ifTheyAreAllArrayValuesThenEachOne = itIsTrueThatTheFollowingFields.ifTheyAreAllArrayValuesThenEachOne();
+			RangeSize numberAndItIs = ifTheyAreAllArrayValuesThenEachOne.isNumberAndItIs();
+			return numberAndItIs.equalsTo(bound);
 		}
 	},
 	equalsOrGreaterThan
